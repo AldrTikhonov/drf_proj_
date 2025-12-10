@@ -4,7 +4,7 @@ from rest_framework.routers import SimpleRouter
 from courses.apps import CoursesConfig
 from courses.views import (CourseViewSet, LessonCreateApiView,
                            LessonDestroyApiView, LessonListApiView,
-                           LessonRetrieveApiView, LessonUpdateApiView)
+                           LessonUpdateApiView, LessonRetrieveApiView)
 
 app_name = CoursesConfig.name
 
