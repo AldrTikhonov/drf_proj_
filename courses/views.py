@@ -5,14 +5,19 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.viewsets import ModelViewSet
 
 from courses.models import Course, Lesson
-from courses.serializers import (CourseSerializer, LessonDetailSerializer,
-                                 LessonSerializer)
+from courses.serializers import (CourseSerializer,
+                                 LessonSerializer, CourseDetailSerializer)
 from users.permissions import IsModer, IsOwner
 
 
 class CourseViewSet(ModelViewSet):
     queryset = Course.objects.all()
     serializer_class = CourseSerializer
+
+    def get_serializer_class(self):
+        if self.action == "retrieve":
+            return CourseDetailSerializer
+        return CourseSerializer
 
     def perform_create(self, serializer):
         course = serializer.save()
@@ -47,19 +52,17 @@ class LessonListApiView(ListAPIView):
 
 class LessonRetrieveApiView(RetrieveAPIView):
     queryset = Lesson.objects.all()
-    permission_classes = (IsAuthenticated, IsModer | IsOwner)
-
-    def get_serializer_class(self):
-        return LessonDetailSerializer
+    serializer_class = LessonSerializer
+    permission_classes = (IsAuthenticated, IsModer | IsOwner,)
 
 
 class LessonUpdateApiView(UpdateAPIView):
     queryset = Lesson.objects.all()
     serializer_class = LessonSerializer
-    permission_classes = (IsAuthenticated, IsModer | IsOwner)
+    permission_classes = (IsAuthenticated, IsModer | IsOwner,)
 
 
 class LessonDestroyApiView(DestroyAPIView):
     queryset = Lesson.objects.all()
     serializer_class = LessonSerializer
-    permission_classes = (IsAuthenticated, IsOwner, ~IsModer)
+    permission_classes = (IsAuthenticated, IsOwner | ~IsModer,)
