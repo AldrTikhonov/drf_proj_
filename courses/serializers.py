@@ -1,11 +1,12 @@
 from rest_framework.fields import SerializerMethodField
 from rest_framework import serializers
 
-from courses.models import Course, Lesson
+from courses.models import Course, Lesson, CourseSubscription
 from courses.validators import youtube_pattern
 
 
 class LessonSerializer(serializers.ModelSerializer):
+    """ Сериализатор для уроков. """
     video_url = serializers.URLField(validators=[youtube_pattern], read_only=True)
     class Meta:
         model = Lesson
@@ -13,12 +14,14 @@ class LessonSerializer(serializers.ModelSerializer):
 
 
 class CourseSerializer(serializers.ModelSerializer):
+    """ Сериализатор для курсов. """
     class Meta:
         model = Course
         fields = "__all__"
 
 class CourseDetailSerializer(serializers.ModelSerializer):
-    lessons_count = serializers.SerializerMethodField()
+    """ Сериализатор для просмотра курса. """
+    lessons_count = serializers.SerializerMethodField(many=True, read_only=True)
 
     # lessons = LessonSerializer(many=True, read_only=True)
 
@@ -28,3 +31,10 @@ class CourseDetailSerializer(serializers.ModelSerializer):
     class Meta:
         model = Course
         fields = ["id", "name", "image", "description", "owner", "lessons_count"]
+
+
+class CourseSubscriptionSerializer(serializers.ModelSerializer):
+    """ Сериализатор для подписки на курсы. """
+    class Meta:
+        model = CourseSubscription
+        fields = ["user", "course", "subscribed_at"]
