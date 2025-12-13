@@ -3,6 +3,7 @@ from rest_framework import permissions
 
 class IsModer(permissions.BasePermission):
     """Проверяет, является ли пользователь модератором."""
+
     message = "Доступ только модераторам."
 
     def has_permission(self, request, view):
@@ -11,6 +12,7 @@ class IsModer(permissions.BasePermission):
 
 class IsOwner(permissions.BasePermission):
     """Проверяет, является ли пользователь владельцем"""
+
     message = "Доступ только владельцам"
 
     def has_object_permission(self, request, view, obj):
