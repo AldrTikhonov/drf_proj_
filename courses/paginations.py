@@ -2,7 +2,8 @@ from rest_framework.pagination import PageNumberPagination
 
 
 class CustomPagination(PageNumberPagination):
-    """ Количество элементов на странице. """
+    """Количество элементов на странице."""
+
     page_size = 10
 
     """ Параметр запроса для изменения количества элементов на странице. """

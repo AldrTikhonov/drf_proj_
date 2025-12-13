@@ -6,10 +6,10 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.viewsets import ModelViewSet
 
-from courses.models import Course, Lesson, CourseSubscription
+from courses.models import Course, CourseSubscription, Lesson
 from courses.paginations import CustomPagination
-from courses.serializers import (CourseSerializer,
-                                 LessonSerializer, CourseDetailSerializer)
+from courses.serializers import (CourseDetailSerializer, CourseSerializer,
+                                 LessonSerializer)
 from users.permissions import IsModer, IsOwner
 
 
@@ -58,19 +58,28 @@ class LessonListApiView(ListAPIView):
 class LessonRetrieveApiView(RetrieveAPIView):
     queryset = Lesson.objects.all()
     serializer_class = LessonSerializer
-    permission_classes = (IsAuthenticated, IsModer | IsOwner,)
+    permission_classes = (
+        IsAuthenticated,
+        IsModer | IsOwner,
+    )
 
 
 class LessonUpdateApiView(UpdateAPIView):
     queryset = Lesson.objects.all()
     serializer_class = LessonSerializer
-    permission_classes = (IsAuthenticated, IsModer | IsOwner,)
+    permission_classes = (
+        IsAuthenticated,
+        IsModer | IsOwner,
+    )
 
 
 class LessonDestroyApiView(DestroyAPIView):
     queryset = Lesson.objects.all()
     serializer_class = LessonSerializer
-    permission_classes = (IsAuthenticated, IsOwner | ~IsModer,)
+    permission_classes = (
+        IsAuthenticated,
+        IsOwner | ~IsModer,
+    )
 
 
 class CourseSubscriptionView(APIView):
