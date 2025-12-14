@@ -2,13 +2,13 @@ from rest_framework import serializers
 from rest_framework.fields import SerializerMethodField
 
 from courses.models import Course, CourseSubscription, Lesson
-from courses.validators import youtube_pattern
+from courses.validators import YouTubeValidator
 
 
 class LessonSerializer(serializers.ModelSerializer):
     """Сериализатор для уроков."""
 
-    video_url = serializers.URLField(validators=[youtube_pattern], read_only=True)
+    video_url = serializers.URLField(validators=[YouTubeValidator()], read_only=True)
 
     class Meta:
         model = Lesson
@@ -26,7 +26,7 @@ class CourseSerializer(serializers.ModelSerializer):
 class CourseDetailSerializer(serializers.ModelSerializer):
     """Сериализатор для просмотра курса."""
 
-    lessons_count = serializers.SerializerMethodField(many=True, read_only=True)
+    lessons_count = serializers.SerializerMethodField()
 
     # lessons = LessonSerializer(many=True, read_only=True)
 
