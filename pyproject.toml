@@ -17,6 +17,7 @@ djangorestframework-simplejwt = "^5.5.1"
 django-filter = "^25.2"
 isort = "^7.0.0"
 ipython = "^9.8.0"
+coverage = "^7.13.0"
 
 
 [build-system]
