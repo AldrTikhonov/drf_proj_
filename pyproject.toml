@@ -18,6 +18,8 @@ django-filter = "^25.2"
 isort = "^7.0.0"
 ipython = "^9.8.0"
 coverage = "^7.13.0"
+drf-yasg = "^1.21.11"
+drf-spectacular = "^0.29.0"
 
 
 [build-system]
