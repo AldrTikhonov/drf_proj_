@@ -4,9 +4,11 @@ from rest_framework.generics import (CreateAPIView, DestroyAPIView,
                                      ListAPIView, RetrieveAPIView,
                                      UpdateAPIView)
 from rest_framework.permissions import AllowAny
+from rest_framework.viewsets import ModelViewSet
 
 from users.models import Payments, User
 from users.serializers import PaymentsSerializer, UserSerializer
+from users.service import create_product, create_price, create_session
 
 
 class UserCreateAPIView(CreateAPIView):
@@ -25,30 +27,12 @@ class PaymentsCreateApiView(CreateAPIView):
     serializer_class = PaymentsSerializer
 
 
-class PaymentsListApiView(ListAPIView):
-    queryset = Payments.objects.all()
-    serializer_class = PaymentsSerializer
+    def perform_create(self, serializer):
+        payment = serializer.save(user=self.request.user)
+        product = create_product(payment)
+        price = create_price(payment, product)
+        session_id, session_url = create_session(price)
+        payment.session_id = session_id
+        payment.link_pay = session_url
+        payment.save()
 
-    filter_backends = [DjangoFilterBackend, filters.OrderingFilter]
-    filterset_fields = (
-        "course",
-        "lesson",
-        "payment_method",
-    )
-    ordering_fields = ("date",)
-    ordering = ("date",)
-
-
-class PaymentsRetrieveApiView(RetrieveAPIView):
-    queryset = Payments.objects.all()
-    serializer_class = PaymentsSerializer
-
-
-class PaymentsUpdateApiView(UpdateAPIView):
-    queryset = Payments.objects.all()
-    serializer_class = PaymentsSerializer
-
-
-class PaymentsDestroyApiView(DestroyAPIView):
-    queryset = Payments.objects.all()
-    serializer_class = PaymentsSerializer
