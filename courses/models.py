@@ -14,6 +14,8 @@ class Course(models.Model):
         verbose_name="Картинка",
         help_text="Загрузите картинку",
     )
+    stripe_id = models.CharField(**NULLABLE, max_length=255, help_text="id продукта в stripe", verbose_name="id продукта")
+
     description = models.TextField(
         **NULLABLE, verbose_name="Описание", help_text="Опишите курс"
     )
