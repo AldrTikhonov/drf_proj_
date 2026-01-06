@@ -11,6 +11,7 @@ from courses.paginations import CustomPagination
 from courses.serializers import (CourseDetailSerializer, CourseSerializer,
                                  LessonSerializer)
 from users.permissions import IsModer, IsOwner
+from .task import send_course_update_email
 
 
 class CourseViewSet(ModelViewSet):
@@ -37,6 +38,11 @@ class CourseViewSet(ModelViewSet):
             self.permission_classes = (~IsModer | IsOwner,)
         return super().get_permissions()
 
+    def perform_update(self, serializer):
+        course = serializer.save()
+        emails = CourseSubscription.objects.filter(course=course).values_list("user__email", flat=True)
+        for email in emails:
+            send_course_update_email.delay(email, course.name)
 
 class LessonCreateApiView(CreateAPIView):
     queryset = Lesson.objects.all()
